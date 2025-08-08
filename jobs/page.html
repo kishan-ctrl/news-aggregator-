@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head><title>Socket.IO Client</title></head>
+<body>
+  <h2>Real-Time News Notifications</h2>
+  <ul id="notifications"></ul>
+
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+  <script>
+    const socket = io('http://localhost:5000');
+
+    // Replace this with your user ID (from MongoDB _id)
+    const userId = '6895b01d588411772db42da9';
+
+    socket.on('connect', () => {
+      console.log('Connected to server');
+      socket.emit('register', userId); // Identify yourself
+    });
+
+    socket.on('new-article', (article) => {
+      const li = document.createElement('li');
+      li.textContent = `📰 ${article.title}`;
+      document.getElementById('notifications').appendChild(li);
+    });
+  </script>
+</body>
+</html>
