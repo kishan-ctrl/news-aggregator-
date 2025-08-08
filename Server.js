@@ -37,15 +37,15 @@ const connectedUsers = {};
 app.set('connectedUsers', connectedUsers);
 
 io.on('connection', (socket) => {
-  console.log('🟢 New client connected:', socket.id);
+  console.log('New client connected:', socket.id);
 
   socket.on('register', (userId) => {
     connectedUsers[userId] = socket.id;
-    console.log(`✅ Registered user ${userId} with socket ${socket.id}`);
+    console.log(`Registered user ${userId} with socket ${socket.id}`);
   });
 
   socket.on('disconnect', () => {
-    console.log('🔴 Client disconnected:', socket.id);
+    console.log('Client disconnected:', socket.id);
     for (const userId in connectedUsers) {
       if (connectedUsers[userId] === socket.id) {
         delete connectedUsers[userId];

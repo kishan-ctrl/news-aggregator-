@@ -5,7 +5,7 @@ const User = require('../models/User');
 const nodemailer = require('nodemailer');
 
 async function fetchNewsJob(io, connectedUsers) {
-  console.log('🕒 Running news fetch job...');
+  console.log('Running news fetch job...');
 
   try {
     // Fetch news from API
@@ -35,45 +35,45 @@ async function fetchNewsJob(io, connectedUsers) {
       const users = await User.find({ preferences: 'general' });
 
       for (const user of users) {
-        // 🔹 Emit to connected socket
+        // Emit to connected socket
         const socketId = connectedUsers[user._id.toString()];
         if (socketId) {
           io.to(socketId).emit('new-article', newArticle);
           console.log(`🔔 Sent article "${newArticle.title}" to ${user.email}`);
         }
 
-        // 🔹 Send email notification
+        // Send email notification
         await sendEmail(user.email, newArticle);
       }
     }
 
-    console.log('✅ News fetch job completed.');
+    console.log('News fetch job completed.');
   } catch (err) {
-    console.error('❌ Error fetching news:', err.message);
+    console.error('Error fetching news:', err.message);
   }
 }
 
-async function sendEmail(to, article) {
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.EMAIL_USER, // your email
-      pass: process.env.EMAIL_PASS  // your email password/app password
-    }
-  });
+// async function sendEmail(to, article) {
+//   const transporter = nodemailer.createTransport({
+//     service: 'gmail',
+//     auth: {
+//       user: process.env.EMAIL_USER, 
+//       pass: process.env.EMAIL_PASS  
+//     }
+//   });
 
-  await transporter.sendMail({
-    from: `"News Bot" <${process.env.EMAIL_USER}>`,
-    to,
-    subject: `New Article: ${article.title}`,
-    html: `
-      <h3>${article.title}</h3>
-      <p>${article.description}</p>
-      <a href="${article.url}">Read more</a>
-    `
-  });
+//   await transporter.sendMail({
+//     from: `"News Bot" <${process.env.EMAIL_USER}>`,
+//     to,
+//     subject: `New Article: ${article.title}`,
+//     html: `
+//       <h3>${article.title}</h3>
+//       <p>${article.description}</p>
+//       <a href="${article.url}">Read more</a>
+//     `
+//   });
 
-  console.log(`📧 Email sent to ${to}`);
-}
+//   console.log(`Email sent to ${to}`);
+// }
 
 module.exports = fetchNewsJob;
