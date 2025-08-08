@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html>
-<head><title>Socket.IO Client</title></head>
+<head>
+  <title>Real-Time News Notifications</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    h2 { color: #333; }
+    ul { list-style-type: none; padding: 0; }
+    li { background: #f4f4f4; margin: 8px 0; padding: 10px; border-radius: 6px; }
+    a { text-decoration: none; color: blue; }
+  </style>
+</head>
 <body>
   <h2>Real-Time News Notifications</h2>
   <ul id="notifications"></ul>
@@ -9,18 +18,29 @@
   <script>
     const socket = io('http://localhost:5000');
 
-    // Replace this with your user ID (from MongoDB _id)
-    const userId = '6895b01d588411772db42da9';
+    // Replace with your MongoDB user's _id
+    const userId = '6895cddcc5dbad9581361bc6';
 
     socket.on('connect', () => {
-      console.log('Connected to server');
-      socket.emit('register', userId); // Identify yourself
+      console.log('✅ Connected to server');
+      socket.emit('register', userId);
     });
 
     socket.on('new-article', (article) => {
+      console.log('📰 New article received:', article);
+
       const li = document.createElement('li');
-      li.textContent = `📰 ${article.title}`;
-      document.getElementById('notifications').appendChild(li);
+      li.innerHTML = `
+        <strong>${article.title}</strong><br>
+        <small>${article.category}</small><br>
+        <a href="${article.url}" target="_blank">Read more</a>
+      `;
+
+      document.getElementById('notifications').prepend(li);
+    });
+
+    socket.on('disconnect', () => {
+      console.log('⚠️ Disconnected from server');
     });
   </script>
 </body>
