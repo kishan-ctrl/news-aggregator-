@@ -40,7 +40,7 @@ Follow these steps to get the project up and running on your local machine.
 Clone the project to your local machine.
 
 ```bash
-git clone https://github.com/kishan-ctrl
+git clone https://github.com/kishan-ctrl/news-aggregator-
 cd news-aggregator
 ```
 
@@ -91,7 +91,7 @@ The following are the available API endpoints for interacting with the weather d
 ### `POST /signup`
 ![Postman Screenshot](./images/signup.jpg)
 
-**Description:** User can Signup with email,password and preference 
+**Description:** User can Signup with email,password and preferences 
 **Example URL:** `http://localhost:5000/articles/signup`
 
 **Request Body:**
@@ -121,7 +121,7 @@ The following are the available API endpoints for interacting with the weather d
 ### `POST /login`
 ![Postman Screenshot](./images/Login.jpg)
 
-**Description:** user can login with their valid credintials 
+**Description:** user can login with their valid credentials  
 
 **Example URL:** `http://localhost:5000/articles/login`
 
@@ -142,7 +142,7 @@ The following are the available API endpoints for interacting with the weather d
 
 **Description:** Retrieves all articles from the database.
 
-**Header:** Authorization: Bearer <JWT token>
+**Header:** Authorization: Bearer `<JWT token>`
 
 **Example URL:** `http://localhost:5000/articles`
 
@@ -173,7 +173,7 @@ The following are the available API endpoints for interacting with the weather d
 
 ![Postman Screenshot](./images/get%20single%20article.jpg)
 
-**Header:** Authorization : Bearer <JWT token>
+**Header:** Authorization: Bearer `<JWT token>`
 
 **Success Response (`200 OK`):**
 
@@ -199,7 +199,7 @@ The following are the available API endpoints for interacting with the weather d
 
 **Example URL:** `http://localhost:5000/articles/:id/favorite`
 
-**Header:** Authorization: Bearer <JWT token>
+**Header:** Authorization: Bearer `<JWT token>`
 
 **Success Response (`200 OK`):**
 
@@ -219,7 +219,7 @@ The following are the available API endpoints for interacting with the weather d
 
 **Example URL:** `http://localhost:5000/articles/:id/favorite`
 
-**Header:** Authorization: Bearer <JWT token>
+**Header:** Authorization: Bearer `<JWT token>`
 
 **Success Response (`200 OK`):**
 
@@ -239,7 +239,7 @@ The following are the available API endpoints for interacting with the weather d
 
 **Example URL:** `http://localhost:5000/articles/favorites`
 
-**Header:** Authorization: Bearer <JWT token>
+**Header:** Authorization: Bearer `<JWT token>`
 
 **Success Response (`200 OK`):**
 
