@@ -322,6 +322,6 @@ news-aggregator/
 
 ```
 # License 
-[MIT LICENSE]
+[MIT License](LICENSE)
 
 
