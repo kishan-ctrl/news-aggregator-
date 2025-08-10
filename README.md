@@ -321,7 +321,7 @@ news-aggregator/
 └── client.html              #to referesent the real time notification  
 
 ```
-
-
+# License 
+[MIT License](LICENSE)
 
 
