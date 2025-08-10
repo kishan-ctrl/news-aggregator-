@@ -1,64 +1,54 @@
-const express = require("express");
-const http = require('http');
-const dotenv = require("dotenv");
-const connectDB = require("./config/db");
-const fetchNewsJob = require('./jobs/fetchNews'); // we’ll update this to handle io + email
-const cron = require('node-cron');
+require('dotenv').config();
 
-dotenv.config();
+const express = require('express');
+const http = require('http');
+const { Server } = require('socket.io');
+const connectDB = require("./config/db");
+const cors = require("cors");
+const authRoutes = require("./routes/auth");
+
+
+
+
 
 const app = express();
-const server = http.createServer(app);
-const io = require('socket.io')(server, {
-  cors: {
-    origin: '*', // For dev purposes, allow all
-    methods: ['GET', 'POST']
-  }
-});
-
-// Middleware
 app.use(express.json());
-connectDB();
-
-// Routes
-const authRoutes = require('./routes/auth');
+app.use(cors());
+app.use("/auth",authRoutes);
 const articleRoutes = require('./routes/articles');
-const authenticate = require("./middleware/auth");
-
-app.use('/auth', authRoutes);
 app.use('/articles', articleRoutes);
 
-app.get("/protected", authenticate, (req, res) => {
-  res.json({ message: "You are Authorized", user: req.user });
-});
 
-// Track connected users (userId → socketId)
-const connectedUsers = {};
-app.set('connectedUsers', connectedUsers);
+const { init } = require('./sockets/socket');
+
+
+const server = http.createServer(app);
+const io = init(server);
 
 io.on('connection', (socket) => {
-  console.log('New client connected:', socket.id);
-
-  socket.on('register', (userId) => {
-    connectedUsers[userId] = socket.id;
-    console.log(`Registered user ${userId} with socket ${socket.id}`);
-  });
+  console.log('Socket connected:', socket.id);
 
   socket.on('disconnect', () => {
-    console.log('Client disconnected:', socket.id);
-    for (const userId in connectedUsers) {
-      if (connectedUsers[userId] === socket.id) {
-        delete connectedUsers[userId];
-        break;
-      }
-    }
+    console.log('Socket disconnected:', socket.id);
   });
 });
 
-// Run the news fetch job every minute
-cron.schedule('* * * * *', () => {
-  fetchNewsJob(io, connectedUsers);
-});
 
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => console.log(`🚀 Server running on ${PORT}`));
+const start = async()=>{
+    await connectDB();
+    server.listen(PORT,()=>console.log(`server listening on Port ${PORT}`));
+
+};
+
+start();
+const cron = require('node-cron');
+const fetchArticles = require('./jobs/fetchArticles');
+
+// Every 5 minutes: '*/5 * * * *'
+// You can change the schedule as needed
+cron.schedule('* * * * *', () => {
+  console.log('Running scheduled article fetch...');
+  fetchArticles();
+});
+
